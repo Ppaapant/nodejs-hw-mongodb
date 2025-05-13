@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "main": "index.js",
   "type": "module",
-"scripts": {
-  "dev": "nodemon src/index.js"
-},
+  "scripts": {
+    "dev": "nodemon src/index.js"
+  },
   "keywords": [],
   "author": "Andrew_Chornenko <andriy.chornenko@ukr.net>",
   "license": "ISC",
@@ -19,6 +19,7 @@
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
     "mongoose": "^8.14.2",
+    "morgan": "^1.10.0",
     "pino-http": "^10.4.0"
   }
 }
