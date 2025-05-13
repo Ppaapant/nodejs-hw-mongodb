@@ -1,9 +1,7 @@
-import setupServer from './server.js';
-import connectMongo from './db/initMongoConnection.js';
+import app from './server.js';
 
-const startApp = async () => {
-  await connectMongo();
-  setupServer();
-};
+const PORT = process.env.PORT || 3000;
 
-startApp();
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
