@@ -1,5 +1,5 @@
 import { connectMongo } from './connectMongo.js';
-import { Contact } from '../models/contact.js';
+import Contact from '../models/contact.js';
 import fs from 'fs/promises';
 import path from 'path';
 import { fileURLToPath } from 'url';
