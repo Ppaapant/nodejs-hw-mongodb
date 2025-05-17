@@ -1,31 +1,46 @@
 import express from 'express';
-import morgan from 'morgan';
 import cors from 'cors';
-import contactsRouter from './routes/contactRoutes.js';
+import dotenv from 'dotenv';
+import pino from 'pino-http';
 
-const app = express();
+import { getEnvVar } from './utils/getEnvVar.js';
+import { getAllContactsController } from './controllers/allcontacts.controller.js';
+import { getContactController } from './controllers/contact.controller.js';
 
-// Middleware
-app.use(morgan('dev'));
-app.use(cors({
-  origin: '*',
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  allowedHeaders: ['Content-Type']
-}));
-app.use(express.json());
+dotenv.config();
+const PORT = Number(getEnvVar('PORT', '3000'));
 
-// Routes
-app.use('/contacts', contactsRouter);
+export const setupServer = async () => {
+  const app = express();
 
-// 404 handler
-app.use((req, res) => {
-  res.status(404).json({ message: 'Сторінку не знайдено' });
-});
+  app.use(express.json());
+  app.use(cors());
 
-// Error handler
-app.use((err, req, res, next) => {
-  const { status = 500, message = 'Помилка сервера' } = err;
-  res.status(status).json({ message });
-});
+  app.use(
+    pino({
+      transport: {
+        target: 'pino-pretty',
+      },
+    }),
+  );
 
-export default app;
+  app.get('/', (req, res) => {
+    res.json({
+      message: 'Hello World!',
+    });
+  });
+
+  app.get('/contacts', getAllContactsController);
+
+  app.get('/contacts/:contactId', getContactController);
+
+  app.use((req, res, next) => {
+    res.status(404).json({
+      message: 'Route not found',
+    });
+  });
+
+  app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+  });
+};
