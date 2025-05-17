@@ -1,21 +1,13 @@
-import dotenv from 'dotenv';
-import { fileURLToPath } from 'url';
-import { dirname, join } from 'path';
-import app from './server.js';
-import { connectMongo } from './db/connectMongo.js';
+import { setupServer } from './server.js';
+import { initMongoConnection } from './db/initMongoConnection.js';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
-dotenv.config({ path: join(__dirname, '../.env') });
-
-const PORT = process.env.PORT || 3000;
-
-const startServer = async () => {
-  await connectMongo(); // підключення до Mongo
-  app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-  });
+const bootstrap = async () => {
+  try {
+    await initMongoConnection();
+    setupServer();
+  } catch (error) {
+    console.log(error);
+  }
 };
 
-startServer();
+bootstrap();
