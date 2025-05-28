@@ -1,52 +1,20 @@
 import { ContactsCollection } from '../models/contacts.js';
+import { calculatePaginationData } from '../utils/calculatePaginationData.js';
 
-export const getAllContacts = async () => {
-  try {
-    const contacts = await ContactsCollection.find();
-    return contacts;
-  } catch (error) {
-    console.error(error);
-  }
-};
+export const getAllContacts = async ({ page, perPage, sortBy = 'name', sortOrder = 'asc' }) => {
+  const skip = (page - 1) * perPage;
+  const sortDirection = sortOrder === 'desc' ? -1 : 1;
 
-export const getContactById = async (contactId) => {
-  try {
-    const contact = await ContactsCollection.findById(contactId);
-    return contact;
-  } catch (error) {
-    console.error(error);
-  }
-};
+  const totalItems = await ContactsCollection.countDocuments();
+  const contacts = await ContactsCollection.find()
+    .sort({ [sortBy]: sortDirection })
+    .skip(skip)
+    .limit(perPage);
 
-export const createContact = async (payload) => {
-  const contact = await ContactsCollection.create(payload);
-  return contact;
-};
-
-export const updateContactDetails = async (
-  contactId,
-  payload,
-  options = {},
-) => {
-  const rawResult = await ContactsCollection.findOneAndUpdate(
-    { _id: contactId },
-    payload,
-    {
-      new: true,
-      includeResultMetadata: true,
-      ...options,
-    },
-  );
-
-  if (!rawResult || !rawResult.value) return null;
+  const pagination = calculatePaginationData(totalItems, perPage, page);
 
   return {
-    contact: rawResult.value,
-    isNew: Boolean(rawResult?.lastErrorObject?.upserted),
+    data: contacts,
+    ...pagination,
   };
-};
-
-export const deleteContact = async (contactId) => {
-  const contact = await ContactsCollection.findOneAndDelete({ _id: contactId });
-  return contact;
 };
