@@ -1,6 +1,6 @@
 import createHttpError from 'http-errors';
 
-import { deleteContact } from '../services/contacts.js';
+
 
 export const deleteContactController = async (req, res, next) => {
   const { contactId } = req.params;

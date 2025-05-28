@@ -1,6 +1,6 @@
 import createHttpError from 'http-errors';
 
-import { updateContactDetails } from '../services/contacts.js';
+
 
 export const updateContactController = async (req, res, next) => {
   const { contactId } = req.params;
