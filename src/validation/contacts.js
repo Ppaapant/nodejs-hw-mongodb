@@ -1,19 +1,17 @@
-
-// src/validation/contacts.js
 import Joi from 'joi';
 import { typeList } from '../constants/contacts.js';
-export const createContactSchema = Joi.object({
+export const addValidateContacts = Joi.object({
   name: Joi.string().min(3).max(20).required(),
   phoneNumber: Joi.string().min(3).max(20).required(),
   email: Joi.string().email().optional(),
-  isFavourite: Joi.boolean().optional(),
+  isFavourite: Joi.boolean(),
   contactType: Joi.string().valid(...typeList).required(),
 });
 
-export const updateContactSchema = Joi.object({
+export const updateValidateContacts = Joi.object({
   name: Joi.string().min(3).max(20),
-  phoneNumber: Joi.string().min(3).max(20),
-  email: Joi.string().email(),
+  phoneNumber: Joi.string(),
+  email: Joi.string(),
   isFavourite: Joi.boolean(),
   contactType: Joi.string().valid(...typeList),
-}).min(1); // Обов’язково хоч одне поле
+}).min(1);

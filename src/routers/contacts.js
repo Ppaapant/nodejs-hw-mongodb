@@ -3,7 +3,7 @@ import { ctrlWrapper } from '../utils/ctrlWrapper.js';
 import {
   getContactsController,
   getContactsByIdController,
-  addContactsController,
+  addContactController,
   upsertContactController,
   updateContactController,
   deleteContactController,
@@ -15,6 +15,7 @@ import {
 } from '../validation/contacts.js';
 import { isValidId } from '../middlewares/isValidId.js';
 import { authenticate } from '../middlewares/authenticate.js';
+import { upload } from '../middlewares/multer.js';
 
 const contactRouter = Router();
 
@@ -30,8 +31,9 @@ contactRouter.get(
 
 contactRouter.post(
   '/',
+  upload.single('photo'),
   validateBody(addValidateContacts),
-  ctrlWrapper(addContactsController),
+  ctrlWrapper(addContactController),
 );
 
 contactRouter.put(
@@ -44,6 +46,7 @@ contactRouter.put(
 contactRouter.patch(
   '/:contactId',
   isValidId,
+  upload.single('photo'),
   validateBody(updateValidateContacts),
   ctrlWrapper(updateContactController),
 );
